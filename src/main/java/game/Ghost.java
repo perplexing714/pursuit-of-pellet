@@ -255,6 +255,15 @@ public abstract class Ghost extends Sprite {
     public String getName() { return getClass().getSimpleName(); }
 
     public boolean collidesWith(Player p) {
+
+        if (distanceTo(p.centerX(), p.centerY()) <= size)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
         // TODO (Phase 2): Return true if this ghost is overlapping the player.
         //
         // Use distanceTo(p.centerX(), p.centerY()) to get the pixel distance
@@ -264,8 +273,7 @@ public abstract class Ghost extends Sprite {
         // Consider: should the threshold be exactly size, a bit less, or a bit
         // more? Try a value and see how it feels in-game, then add a comment
         // explaining your choice — and why pixel distance gives a fairer result
-        // than checking whether both sprites are on the same tile.
-        return false; // placeholder — replace this
+        // than checking whether both sprites are on the same tile
     }
 
     @Override

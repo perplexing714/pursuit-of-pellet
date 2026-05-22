@@ -126,7 +126,7 @@ public enum Tile {
     SPAWN_PLAYER, // Player start
     SPAWN_G0,     // Shadow (red ghost)
     SPAWN_G1,     // Patrol (pink ghost)
-    SPAWN_G2,     // Shy (cyan ghost)
+    SPAWN_G2,     // Shy (cyan gho[GameMap.java](../src/main/java/game/GameMap.java)st)
     SPAWN_G3,     // Ambush (orange ghost)
     SPAWN_BONUS   // Where the bonus item appears
 }

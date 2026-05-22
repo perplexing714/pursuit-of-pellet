@@ -33,13 +33,29 @@ public class Player extends Sprite {
 
     public void handleKey(KeyCode key) {
         // TODO (Phase 1): Queue the player's next movement direction.
-        //
+        switch (key) {
+            case RIGHT, D -> { nextDx =  1; nextDy =  0; }
+            default -> {}
+        }
+        switch (key) {
+            case LEFT, A -> { nextDx =  -1; nextDy =  0; }
+            default -> {}
+        }
+        switch (key) {
+            case DOWN, S -> { nextDx =  0; nextDy =  1; }
+            default -> {}
+        }
+        switch (key) {
+            case UP, W -> { nextDx =  0; nextDy =  -1; }
+            default -> {}
+        }
+        //}
         // Each arrow key (and WASD equivalent) maps to a (nextDx, nextDy) pair:
         //   right / D  →  nextDx =  1, nextDy =  0
         //   left  / A  →  nextDx = -1, nextDy =  0
         //   down  / S  →  nextDx =  0, nextDy =  1
         //   up    / W  →  nextDx =  0, nextDy = -1
-        //
+
         // Use a switch statement on `key` with KeyCode.RIGHT, LEFT, DOWN, UP
         // (and D, A, S, W). The movement engine reads nextDx/nextDy every frame
         // and applies the turn when the player reaches the next tile center.
@@ -77,7 +93,7 @@ public class Player extends Sprite {
         // Use map.isWall(nc, nr) and map.isOutOfGrid(nc, nr).
         // Think about what should happen when (nc, nr) is outside the grid entirely —
         // should that block the player or allow movement? Add a comment explaining your reasoning.
-        boolean canMove = true; // placeholder — replace this line
+        boolean canMove = (!map.isWall(nc, nr) || nc < 0 || nc > map.cols || nr < 0 || nr > map.rows); // placeholder — replace this line
         if (canMove) {
             x = nx;
             y = ny;

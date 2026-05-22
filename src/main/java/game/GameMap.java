@@ -65,21 +65,21 @@ public class GameMap {
     // Pass a different Tile[][] to GameMap(layout) for a custom maze.
     // ---------------------------------------------------------------
     public static final Tile[][] DEFAULT_LAYOUT = {
-        {W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W},
-        {W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W},
-        {W,  P,  W,  W,  D,  W,  W,  D,  W,  W,  D,  W,  W,  P,  W},
-        {W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W},
-        {W,  D,  W,  W,  W,  W,  W,  E,  W,  W,  W,  W,  W,  D,  W},
-        {W,  D,  D,  D,  W,  E,  G1, G0, G2, E,  W,  D,  D,  D,  W},
-        {W,  D,  W,  D,  W,  E,  G3, E,  E,  E,  W,  D,  W,  D,  W},
-        {W,  D,  D,  D,  W,  W,  W,  W,  W,  W,  W,  D,  D,  D,  W},
-        {W,  D,  W,  W,  D,  D,  D,  PL, D,  D,  D,  W,  W,  D,  W},
-        {W,  D,  D,  D,  D,  W,  D,  BN, D,  W,  D,  D,  D,  D,  W},
-        {W,  D,  W,  W,  D,  W,  D,  D,  D,  W,  D,  W,  W,  D,  W},
-        {W,  P,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  P,  W},
+        {W,  W,  W,  E,  W,  W,  W,  W,  W,  W,  W,  E,  W,  W,  W},
+        {W,  P,  W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W,  P,  W},
         {W,  D,  W,  W,  D,  W,  W,  D,  W,  W,  D,  W,  W,  D,  W},
-        {W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W},
-        {W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W,  W},
+        {W,  D,  W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W,  D,  W},
+        {W,  D,  D,  D,  W,  W,  W,  P,  W,  W,  W,  D,  D,  D,  W},
+        {W,  D,  W,  D,  W,  G3,  G1, E, G0, G2,  W,  D,  W,  D,  W},
+        {W,  D,  D,  D,  W,  E,  W,  W,  W,  E,  W,  D,  D,  D,  W},
+        {W,  W,  W,  D,  W,  E,  E,  BN,  E,  E,  W,  D,  W,  W,  W},
+        {W,  D,  D,  D,  W,  W,  W,  W,  W,  W , W,  D,  D,  D,  W},
+        {W,  D,  W,  D,  D,  D,  D,  D, D,  D,  D,  D,  W,  D,  W},
+        {W,  D,  D,  D,  W,  W,  D,  PL,  D,  W,  W,  D,  D,  D,  W},
+        {W,  D,  W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W,  D,  W},
+        {W,  D,  W,  W,  D,  W,  W,  D,  W,  W,  D,  W,  W,  D,  W},
+        {W,  P,  W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W,  P,  W},
+        {W,  W,  W,  E,  W,  W,  W,  W,  W,  W,  W,  E,  W,  W,  W},
     };
 
     // Original layout (never modified) and working copy (dots consumed as eaten)
@@ -170,29 +170,46 @@ public class GameMap {
     }
 
     public Tile getTile(int col, int row) {
-        if (row < 0 || row >= rows || col < 0 || col >= cols) return Tile.W; // TODO: replace with isOutOfGrid()
+        if (isOutOfGrid(col, row)) return Tile.W; // TODO: replace with isOutOfGrid()
         return state[row][col];
     }
 
     public boolean isOutOfGrid(int col, int row) {
         // TODO (Phase 1): Return true if (col, row) is outside the grid.
         // The grid has 'cols' columns (0 to cols-1) and 'rows' rows (0 to rows-1).
-        return false; // placeholder — replace this
+        // placeholder — replace this
+        return (col < 0 || col > cols - 1 || row < 0 || row > rows - 1);
     }
 
     public boolean isWall(int col, int row) {
         // TODO (Phase 1): Return true if the tile at (col, row) is a wall.
         // Use getTile(col, row) — one line is enough.
-        return false; // placeholder — replace this
+        return getTile(col, row).equals(Tile.W);// placeholder — replace this
     }
 
     // Returns 0 if nothing eaten, 10 for dot, 50 for power pellet
     public int eatDot(int col, int row) {
         // TODO (Phase 1): If there is a dot or power pellet at (col, row), remove it
+
+        if (getTile(col, row) == Tile.D)
+        {
+            state[row][col] = Tile.E;
+            dotsRemaining--;
+            return 10;
+        }
+        else if (getTile(col, row) == Tile.P)
+        {
+            state[row][col] = Tile.E;
+            dotsRemaining--;
+            return 50;
+        }
+        else
+        {
+            return 0;
+        }
         // and return its point value. If the tile is empty, return 0.
         // Removing a dot means replacing it with Tile.E and updating dotsRemaining.
         // Note: state is indexed [row][col], not [col][row].
-        return 0; // placeholder — replace this
     }
 
     public boolean isPowerPellet(int col, int row) {
@@ -209,12 +226,42 @@ public class GameMap {
     public double tileCenterY(int row)  { return row * TILE + TILE / 2.0; }
 
     public void draw(GraphicsContext gc) {
-        draw(gc, Color.web("#888800")); // change this hex code to pick your wall color
+        draw(gc, Color.web("#46ab5f")); // change this hex code to pick your wall color
     }
 
     public void draw(GraphicsContext gc, Color wallColor) {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, width, height);
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < cols; c++) {
+                double py = r * TILE;
+                double px = c * TILE;
+                Tile t = state[r][c];
+
+                double cx = 0;
+                double cy = 0;
+
+                if (t == Tile.W)
+                {
+                    gc.setFill(wallColor);
+                    gc.fillRoundRect(px + 1, py + 1, TILE - 2, TILE - 2, 6, 6);
+                }
+                else if (t == Tile.D) {
+                    cx = px + TILE / 2.0;
+                    cy = py + TILE / 2.0;
+                    gc.setFill(dotColor);
+                    gc.fillOval(cx - 3, cy - 3, 6, 6);
+                }
+                else if (t == Tile.P)
+                {
+                    cx = px + TILE / 2.0;
+                    cy = py + TILE / 2.0;
+                    gc.setFill(dotColor);
+                    gc.fillOval(cx - 7, cy - 7, 14, 14);
+                }
+            }
+        }
 
         // TODO (Phase 1): Loop over every row r (0..rows-1) and every col c (0..cols-1).
         // Inside the loop:

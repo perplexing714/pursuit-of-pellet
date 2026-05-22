@@ -18,7 +18,9 @@ public class Patrol extends Ghost {
     }
 
     @Override
-    public String getName() { return "Patrol"; } // give your ghost a name
+    public String getName() {
+        return "Patrol";
+    } // give your ghost a name
 
     @Override
     protected int[] chooseTarget(Player player, GameMap map) {
@@ -38,13 +40,35 @@ public class Patrol extends Ghost {
         // How to verify: run the game and stay far from the pink ghost — it should
         // move toward the top-right area of the maze. Walk close and it should
         // switch to chasing you directly.
-
-        return new int[]{ player.col(map), player.row(map) }; // placeholder — replace this
+        if (frightened) {
+            // Run away: target the corner farthest from the player
+            int pc = player.col(map), pr = player.row(map);
+            int targetCol, targetRow;
+            if (pc < map.cols / 2) {
+                targetCol = map.cols - 2;
+            } else {
+                targetCol = 1;
+            }
+            if (pr < map.rows / 2) {
+                targetRow = map.rows - 2;
+            } else {
+                targetRow = 1;
+            }
+            return new int[]{targetCol, targetRow};
+        } else {
+            if (Math.hypot(player.col(map), player.row(map)) > CHASE_RADIUS) {
+                return new int[]{map.cols - 2, CORNER_ROW};
+            } else {
+                return new int[]{player.col(map), player.row(map)};
+            }
+        }
     }
+        // When chooseTarget() is working, add this ghost to the list in GameApp.java:
+        //   new Patrol(map)
 
-    // When chooseTarget() is working, add this ghost to the list in GameApp.java:
-    //   new Patrol(map)
-
-    @Override
-    protected Color getBodyColor() { return Color.web("#ffb8ff"); }
+        @Override
+        protected Color getBodyColor()
+        {
+            return Color.web("#ffb8ff");
+        }
 }
