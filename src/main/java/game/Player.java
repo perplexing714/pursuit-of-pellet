@@ -105,10 +105,10 @@ public class Player extends Sprite {
         if (dy != 0) x = map.tileCenterX(col(map)) - size / 2.0;
 
         // Wrap tunnels — any open edge row/col wraps to the opposite side
-        if (x + size < 0      && map.isHorizontalTunnel(row(map))) x = map.width  - size;
-        if (x > map.width     && map.isHorizontalTunnel(row(map))) x = 0;
-        if (y + size < 0      && map.isVerticalTunnel(col(map)))   y = map.height - size;
-        if (y > map.height    && map.isVerticalTunnel(col(map)))   y = 0;
+        if (x + size < GameMap.TILE * -1     && map.isHorizontalTunnel(row(map))) x = map.width - size + GameMap.TILE;
+        if (x > map.width + GameMap.TILE    && map.isHorizontalTunnel(row(map))) x = GameMap.TILE * -1;
+        if (y + size < GameMap.TILE * -1     && map.isVerticalTunnel(col(map)))   y = map.height - size + GameMap.TILE;
+        if (y > map.height + GameMap.TILE   && map.isVerticalTunnel(col(map)))   y = GameMap.TILE * -1;
 
         // Mouth animates only while moving; freezes when blocked
         if (canMove) {

@@ -256,14 +256,7 @@ public abstract class Ghost extends Sprite {
 
     public boolean collidesWith(Player p) {
 
-        if (distanceTo(p.centerX(), p.centerY()) <= size)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return distanceTo(p.centerX(), p.centerY()) <= size;
         // TODO (Phase 2): Return true if this ghost is overlapping the player.
         //
         // Use distanceTo(p.centerX(), p.centerY()) to get the pixel distance
