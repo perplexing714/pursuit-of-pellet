@@ -19,7 +19,34 @@ public class Ambush extends Ghost {
     @Override
     protected int[] chooseTarget(Player player, GameMap map) {
         // TODO (Base): Implement Ambush's personality.
-        //
+        if (frightened)
+        {
+            int pc = player.col(map), pr = player.row(map);
+            int targetCol, targetRow;
+            if (pc < map.cols / 2) {
+                targetCol = map.cols - 2;
+            } else {
+                targetCol = 1;
+            }
+            if (pr < map.rows / 2) {
+                targetRow = map.rows - 2;
+            } else {
+                targetRow = 1;
+            }
+            return new int[]{targetCol, targetRow};
+        }
+        else
+        {
+            int pc = player.col(map);
+            int pr = player.row(map);
+            int dx = player.getDx();
+            int dy = player.getDy();
+            int targetCol = pc + (dx * LOOK_AHEAD);
+            int targetRow = pr + (dy * LOOK_AHEAD);
+            targetCol = Math.max(1, Math.min(map.cols - 2, targetCol)); // keeps the area within bounds
+            targetRow = Math.max(1, Math.min(map.rows - 2, targetRow));
+            return new int[]{targetCol, targetRow};
+        }
         // Ambush targets a point LOOK_AHEAD tiles ahead of the player's current
         // heading. Use player.getDx() and player.getDy() to find the heading,
         // then project that many tiles forward from the player's tile position.
@@ -31,8 +58,6 @@ public class Ambush extends Ghost {
         //
         // How to verify: run the game and move in one direction — the orange ghost
         // should approach from in front of you rather than chasing from behind.
-
-        return new int[]{ player.col(map), player.row(map) }; // placeholder — replace this
     }
 
     // When chooseTarget() is working, add this ghost to the list in GameApp.java:

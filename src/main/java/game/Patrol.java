@@ -56,10 +56,15 @@ public class Patrol extends Ghost {
             }
             return new int[]{targetCol, targetRow};
         } else {
-            if (Math.hypot(player.col(map), player.row(map)) > CHASE_RADIUS) {
+            int pc = player.col(map);
+            int pr = player.row(map);
+            int gc = this.col(map);
+            int gr = this.row(map);
+            double dist = Math.hypot(pc - gc, pr - gr);
+            if (dist > CHASE_RADIUS) {
                 return new int[]{map.cols - 2, CORNER_ROW};
             } else {
-                return new int[]{player.col(map), player.row(map)};
+                return new int[]{pc, pr};
             }
         }
     }

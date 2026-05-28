@@ -93,7 +93,7 @@ public class Player extends Sprite {
         // Use map.isWall(nc, nr) and map.isOutOfGrid(nc, nr).
         // Think about what should happen when (nc, nr) is outside the grid entirely —
         // should that block the player or allow movement? Add a comment explaining your reasoning.
-        boolean canMove = (!map.isWall(nc, nr) || nc < 0 || nc > map.cols || nr < 0 || nr > map.rows); // placeholder — replace this line
+        boolean canMove = (!map.isWall(nc, nr) || map.isOutOfGrid(nc, nr)); // placeholder — replace this line
         if (canMove) {
             x = nx;
             y = ny;
