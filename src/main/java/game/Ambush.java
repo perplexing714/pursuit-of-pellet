@@ -21,7 +21,7 @@ public class Ambush extends Ghost {
         // TODO (Base): Implement Ambush's personality.
         if (frightened)
         {
-            int pc = player.col(map), pr = player.row(map);
+            int pc = player.col(map), pr = player.row(map); // targets a corner farthest away from player
             int targetCol, targetRow;
             if (pc < map.cols / 2) {
                 targetCol = map.cols - 2;
@@ -41,7 +41,7 @@ public class Ambush extends Ghost {
             int pr = player.row(map);
             int dx = player.getDx();
             int dy = player.getDy();
-            int targetCol = pc + (dx * LOOK_AHEAD);
+            int targetCol = pc + (dx * LOOK_AHEAD); // player's position + (direction of movement * how many spaces in front)
             int targetRow = pr + (dy * LOOK_AHEAD);
             targetCol = Math.max(1, Math.min(map.cols - 2, targetCol)); // keeps the area within bounds
             targetRow = Math.max(1, Math.min(map.rows - 2, targetRow));

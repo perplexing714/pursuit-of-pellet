@@ -178,34 +178,34 @@ public class GameMap {
         // TODO (Phase 1): Return true if (col, row) is outside the grid.
         // The grid has 'cols' columns (0 to cols-1) and 'rows' rows (0 to rows-1).
         // placeholder — replace this
-        return (col < 0 || col > cols - 1 || row < 0 || row > rows - 1);
+        return (col < 0 || col > cols - 1 || row < 0 || row > rows - 1); // checks if any of the bounds are breached
     }
 
     public boolean isWall(int col, int row) {
         // TODO (Phase 1): Return true if the tile at (col, row) is a wall.
         // Use getTile(col, row) — one line is enough.
-        return getTile(col, row).equals(Tile.W);// placeholder — replace this
+        return getTile(col, row).equals(Tile.W);
     }
 
     // Returns 0 if nothing eaten, 10 for dot, 50 for power pellet
     public int eatDot(int col, int row) {
         // TODO (Phase 1): If there is a dot or power pellet at (col, row), remove it
 
-        if (getTile(col, row) == Tile.D)
+        if (getTile(col, row) == Tile.D) // checks location square for dots
         {
-            state[row][col] = Tile.E;
+            state[row][col] = Tile.E; // replaces with empty square
             dotsRemaining--;
-            return 10;
+            return 10; // score value
         }
-        else if (getTile(col, row) == Tile.P)
+        else if (getTile(col, row) == Tile.P) // checks location square for power pellet
         {
-            state[row][col] = Tile.E;
+            state[row][col] = Tile.E; // replaces with empty square
             dotsRemaining--;
-            return 50;
+            return 50; // score value
         }
         else
         {
-            return 0;
+            return 0; // if the tile is empty, no dot is eaten and no score is added
         }
         // and return its point value. If the tile is empty, return 0.
         // Removing a dot means replacing it with Tile.E and updating dotsRemaining.

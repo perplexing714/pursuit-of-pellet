@@ -34,7 +34,7 @@ public class Player extends Sprite {
     public void handleKey(KeyCode key) {
         // TODO (Phase 1): Queue the player's next movement direction.
         switch (key) {
-            case RIGHT, D -> { nextDx =  1; nextDy =  0; }
+            case RIGHT, D -> { nextDx =  1; nextDy =  0; } // direction switches based off of the direction of the key
             default -> {}
         }
         switch (key) {
@@ -93,7 +93,8 @@ public class Player extends Sprite {
         // Use map.isWall(nc, nr) and map.isOutOfGrid(nc, nr).
         // Think about what should happen when (nc, nr) is outside the grid entirely —
         // should that block the player or allow movement? Add a comment explaining your reasoning.
-        boolean canMove = (!map.isWall(nc, nr) || map.isOutOfGrid(nc, nr)); // placeholder — replace this line
+        // pretty sure that should tunnel, i think there's not a problem if it's no tunnel and it's just them walking around
+        boolean canMove = (!map.isWall(nc, nr) || map.isOutOfGrid(nc, nr)); // checks if they're out of grid or if there's a wall in front
         if (canMove) {
             x = nx;
             y = ny;

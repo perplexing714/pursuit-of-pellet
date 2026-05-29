@@ -94,7 +94,7 @@ public class LevelConfig {
         speed = Math.min(speed, 2.0);
 
         // --- frighten duration ---------------------------------------------
-        // Starts at 6 seconds and drops by 0.4 s each level.
+        // Starts at 6 seconds and drops by 0.25 s each level.
         // Clamped to 1 so it never goes negative and so there's a usage for power pellets in later levels.
         double frighten = 6.0 - (level - 1) * 0.25;
         frighten = Math.max(frighten, 1.0);

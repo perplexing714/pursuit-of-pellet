@@ -18,14 +18,14 @@ public class Shy extends Ghost {
         //
         if (frightened)
         {
-            return new int[]{ player.col(map), player.row(map)};
+            return new int[]{ player.col(map), player.row(map)}; // shy chases the player when frightened
         }
         else
         {
             int sc = this.col(map);
             int sr = this.row(map);
             int open = 0;
-            if (!map.isWall(sc + 1, sr))
+            if (!map.isWall(sc + 1, sr)) // this. checks if the ghosts exact position has walls open on each side
             {
                 open++;
             }
@@ -57,7 +57,7 @@ public class Shy extends Ghost {
                 double largestDist = 0;
                 int targetCol = 1;
                 int targetRow = 1;
-                if (dist1 > largestDist)
+                if (dist1 > largestDist) // each of these checks whether the distance to each corner is larger than the previous largest
                 {
                     largestDist = dist1;
                     targetCol = 1;
@@ -77,11 +77,11 @@ public class Shy extends Ghost {
                 }
                 if (dist4 > largestDist)
                 {
-                    largestDist = dist4;
+                    largestDist = dist4; // largestDist just helps with the tracking of distance, doesn't actually get used
                     targetCol = map.cols - 2;
                     targetRow = map.rows - 2;
                 }
-                return new int[]{ targetCol, targetRow};
+                return new int[]{ targetCol, targetRow }; // target column and row are set to whatever was largest and returned
             }
         }
         // Shy has two modes:

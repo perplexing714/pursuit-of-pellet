@@ -172,6 +172,7 @@ public class GameApp extends Application {
                 new Shy(map),
                 new Ambush(map)
                 ));
+        // resets the bonus item and sets active boost to false so the boost doesn't carry on to the next level
         bonusSpawned = false;
         activeBoost = false;
         speedBoostTimer = 0;
@@ -264,7 +265,7 @@ public class GameApp extends Application {
                 if (config.spawnDelay > 0) {
                     for (int i = 1; i < ghosts.size(); i++) ghosts.get(i).setActive(false);
                 }
-                activeBoost = false;
+                activeBoost = false; // makes sure the player doesn't keep the speed boost from pre-death
                 speedBoostTimer = 0;
                 player.resetSpeed();
                 scoreFlashes.clear();
@@ -288,10 +289,10 @@ public class GameApp extends Application {
 
         player.update(dt, map);
 
-        if (activeBoost)
+        if (activeBoost) // checks if boost is active
         {
-            speedBoostTimer -= dt;
-            if (speedBoostTimer <= 0)
+            speedBoostTimer -= dt; // dt is calculated somewhere else which is just the timer
+            if (speedBoostTimer <= 0) // checks for if the timer is over, turns off boost
             {
                 activeBoost = false;
                 player.resetSpeed();
@@ -386,14 +387,14 @@ public class GameApp extends Application {
             if (item.collidesWith(player)) {
                 score += item.getPoints();
                 audio.playBonus();
-                player.applyBoost(1.25);
+                player.applyBoost(1.25); // speed boost is 1.25x regular speed
                 activeBoost = true;
                 speedBoostTimer = SPEED_BOOST_DURATION;
             }
         }
         List<BonusItem> toRemove = new ArrayList<>();
         for (BonusItem item : bonusItems) {
-            if (item.collidesWith(player) || item.isExpired()) {
+            if (item.collidesWith(player) || item.isExpired()) { // checks for if the item collides w/ player and if it times out, and removes it if so
                 toRemove.add(item);
             }
         }
@@ -443,7 +444,7 @@ public class GameApp extends Application {
             drawCenteredText(gc, "PRESS ENTER TO PLAY AGAIN", 16, Color.web("#666"), canvasH() / 2.0 + 30);
         }
 
-        if (activeBoost)
+        if (activeBoost) // provides a message at the bottom of the screen, notifying player that the boost is active
         {
             drawCenteredText(gc, "Speed boost active!", 18, Color.ANTIQUEWHITE, canvasH() - 10);
         }

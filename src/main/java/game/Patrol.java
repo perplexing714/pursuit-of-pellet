@@ -42,7 +42,7 @@ public class Patrol extends Ghost {
         // switch to chasing you directly.
         if (frightened) {
             // Run away: target the corner farthest from the player
-            int pc = player.col(map), pr = player.row(map);
+            int pc = player.col(map), pr = player.row(map); // target a corner farthest away if frightened
             int targetCol, targetRow;
             if (pc < map.cols / 2) {
                 targetCol = map.cols - 2;
@@ -60,11 +60,11 @@ public class Patrol extends Ghost {
             int pr = player.row(map);
             int gc = this.col(map);
             int gr = this.row(map);
-            double dist = Math.hypot(pc - gc, pr - gr);
-            if (dist > CHASE_RADIUS) {
-                return new int[]{map.cols - 2, CORNER_ROW};
+            double dist = Math.hypot(pc - gc, pr - gr); // distance from player to ghost
+            if (dist > CHASE_RADIUS) { // checks if the distance calculated above is below the radius of chasing
+                return new int[]{map.cols - 2, CORNER_ROW}; // if it is above, go to top right corner
             } else {
-                return new int[]{pc, pr};
+                return new int[]{pc, pr}; // if it's within radius/below, chase the player
             }
         }
     }
