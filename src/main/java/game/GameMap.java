@@ -69,7 +69,7 @@ public class GameMap {
         {W,  P,  W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W,  P,  W},
         {W,  D,  W,  W,  D,  W,  W,  D,  W,  W,  D,  W,  W,  D,  W},
         {W,  D,  W,  D,  D,  D,  D,  D,  D,  D,  D,  D,  W,  D,  W},
-        {W,  D,  D,  D,  W,  W,  W,  P,  W,  W,  W,  D,  D,  D,  W},
+        {W,  D,  D,  D,  W,  W,  W,  E,  W,  W,  W,  D,  D,  D,  W},
         {W,  D,  W,  D,  W,  G3,  G1, E, G0, G2,  W,  D,  W,  D,  W},
         {W,  D,  D,  D,  W,  W,  W,  W,  W,  W,  W,  D,  D,  D,  W},
         {W,  W,  W,  D,  D,  D,  D,  BN,  D,  D,  D,  D,  W,  W,  W},
