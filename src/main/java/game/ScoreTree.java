@@ -22,7 +22,18 @@ public class ScoreTree {
         //
         // Follow the insert() pattern from the Phase 4 guide, adapting it to
         // pass the level parameter when constructing a new ScoreNode.
-        return node; // placeholder — replace this
+        if (node == null)
+        {
+            return new ScoreNode(score, level);
+        }
+        if (score < node.score)
+        {
+            node.left = insert(node.left, score, level);
+        }
+        else {
+            node.right = insert(node.right, score, level);
+        }
+        return node;
     }
 
     // Reverse in-order (right → node → left) yields descending order
@@ -38,6 +49,16 @@ public class ScoreTree {
         // The Phase 4 guide shows printInOrder() which visits left → node → right.
         // Adapt that pattern to visit right → node → left instead (larger scores
         // live in the right subtree), and stop once result has n items.
+        if (node == null || result.size() >= n)
+        {
+            return;
+        }
+        collectDescending(node.right, result, n);
+        if (result.size() < n)
+        {
+            result.add(node);
+        }
+        collectDescending(node.left, result, n);
     }
 
     public boolean isEmpty() {
@@ -53,6 +74,16 @@ public class ScoreTree {
         // TODO (Phase 3): Write all scores to the file, one per line.
         // 1. Get the formatted lines by calling collectInOrder(root, lines).
         // 2. Write each line using BufferedWriter — see the Phase 3 guide for the pattern.
+        List<String> lines = new ArrayList<>();
+        collectInOrder(root, lines);
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (String line : lines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void collectInOrder(ScoreNode node, List<String> lines) {
@@ -70,5 +101,24 @@ public class ScoreTree {
         //    how HashSet works and why add() is useful here.
         // 4. For each unique line, split on " ", parse the two integers,
         //    and call insert().
+        if (!Files.exists(path))
+        {
+            return;
+        }
+        Set<String> seen = new HashSet<>();
+        try {
+            List<String> lines = Files.readAllLines(path);
+            for (String line : lines) {
+                if (seen.add(line))
+                {
+                    String[] parts = line.split(" ");
+                    int score = Integer.parseInt(parts[0]);
+                    int level = Integer.parseInt(parts[1]);
+                    insert(score, level);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

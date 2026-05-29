@@ -118,6 +118,20 @@ public class Player extends Sprite {
         }
     }
 
+    private final double regularSpeed = 2.5;
+
+    public void applyBoost(double multiplier)
+    {
+        speed = regularSpeed * multiplier;
+    }
+
+    public void resetSpeed()
+    {
+        speed = regularSpeed;
+    }
+
+
+
     // True when the sprite is close enough to a tile center to allow turning
     private boolean isAligned(GameMap map) {
         double cx = centerX(), cy = centerY();

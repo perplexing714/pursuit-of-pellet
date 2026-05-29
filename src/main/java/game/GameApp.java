@@ -60,6 +60,7 @@ public class GameApp extends Application {
     // --- Bonus items ---
     private final List<BonusItem> bonusItems = new ArrayList<>();
     private int dotsEaten = 0;
+    private boolean bonusSpawned = false;
 
     // --- Ghost spawn stagger ---
     private double spawnTimer   = 0;
@@ -72,12 +73,17 @@ public class GameApp extends Application {
     private static final int EXTRA_LIFE_THRESHOLD = 10_000;
     private boolean extraLifeAwarded = false;
 
+    // --- Speed Boost ---
+    private double speedBoostTimer = 0;
+    private static final double SPEED_BOOST_DURATION= 5.0;
+    private boolean activeBoost = false;
+
     // --- Score flashes (points that float up when a ghost is eaten) ---
     private final List<ScoreFlash> scoreFlashes = new ArrayList<>();
 
     // --- Level clear flash ---
     private static final double LEVEL_CLEAR_DURATION = 2.0;
-    private static final int    MAX_LEVEL             = 3;
+    private static final int    MAX_LEVEL             = 20;
 
     // --- HUD notification (e.g. "+1 UP!") ---
     private String hudMessage     = null;
@@ -166,7 +172,10 @@ public class GameApp extends Application {
                 new Shy(map),
                 new Ambush(map)
                 ));
-
+        bonusSpawned = false;
+        activeBoost = false;
+        speedBoostTimer = 0;
+        player.resetSpeed();
         // Resize the window only when the new layout has different pixel dimensions
         if (canvas != null &&
                 ((int) canvas.getWidth() != map.width || (int) canvas.getHeight() != canvasH())) {
@@ -255,6 +264,9 @@ public class GameApp extends Application {
                 if (config.spawnDelay > 0) {
                     for (int i = 1; i < ghosts.size(); i++) ghosts.get(i).setActive(false);
                 }
+                activeBoost = false;
+                speedBoostTimer = 0;
+                player.resetSpeed();
                 scoreFlashes.clear();
                 frightenedSirenOn = false;
                 pauseTimer = 2.0;
@@ -276,6 +288,15 @@ public class GameApp extends Application {
 
         player.update(dt, map);
 
+        if (activeBoost)
+        {
+            speedBoostTimer -= dt;
+            if (speedBoostTimer <= 0)
+            {
+                activeBoost = false;
+                player.resetSpeed();
+            }
+        }
         // Eat dots
         int col = player.col(map), row = player.row(map);
         int earned = map.eatDot(col, row);
@@ -296,10 +317,11 @@ public class GameApp extends Application {
                 hudMessage     = "+1 UP!";
                 hudMessageTimer = 2.0;
             }
-            if (bonusItems.isEmpty() && dotsEaten >= config.bonusThreshold) {
+            if (!bonusSpawned && bonusItems.isEmpty() && dotsEaten >= config.bonusThreshold) {
                 double bx = map.tileCenterX(map.spawnCol(GameMap.Tile.SPAWN_BONUS)) - GameMap.TILE / 2.0;
                 double by = map.tileCenterY(map.spawnRow(GameMap.Tile.SPAWN_BONUS)) - GameMap.TILE / 2.0;
-                bonusItems.add(new Cherry(bx, by));
+                bonusItems.add(new SpeedUp(bx, by));
+                bonusSpawned = true;
             }
         }
 
@@ -359,6 +381,23 @@ public class GameApp extends Application {
         // TODO (Phase 3): Update every bonus item and handle collection and expiry.
         // Use two separate loops — see the Phase 3 guide for why a single loop
         // causes a ConcurrentModificationException, and how to structure them.
+        for (BonusItem item : bonusItems) {
+            item.update(dt, map);
+            if (item.collidesWith(player)) {
+                score += item.getPoints();
+                audio.playBonus();
+                player.applyBoost(1.25);
+                activeBoost = true;
+                speedBoostTimer = SPEED_BOOST_DURATION;
+            }
+        }
+        List<BonusItem> toRemove = new ArrayList<>();
+        for (BonusItem item : bonusItems) {
+            if (item.collidesWith(player) || item.isExpired()) {
+                toRemove.add(item);
+            }
+        }
+        bonusItems.removeAll(toRemove);
     }
 
     private void render(GraphicsContext gc) {
@@ -402,6 +441,11 @@ public class GameApp extends Application {
         } else if (state == State.WIN) {
             drawCenteredText(gc, MSG_WIN, 40, Color.YELLOW, canvasH() / 2.0 - 40);
             drawCenteredText(gc, "PRESS ENTER TO PLAY AGAIN", 16, Color.web("#666"), canvasH() / 2.0 + 30);
+        }
+
+        if (activeBoost)
+        {
+            drawCenteredText(gc, "Speed boost active!", 18, Color.ANTIQUEWHITE, canvasH() - 10);
         }
 
         if (paused) {
